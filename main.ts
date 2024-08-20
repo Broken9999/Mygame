@@ -86,7 +86,6 @@ function Move_Enemy () {
         led.plotBrightness(EnemyX, EnemyY, 255)
     }
 }
-let Score = 0
 let Autobot = 0
 let Enemy_Dead = 0
 let EnemyX = 0
@@ -95,6 +94,7 @@ let Move = 0
 let y = 0
 let x = 0
 let AutoWin = 0
+let Score = 0
 AutoWin = 0
 let Speed = 500
 x = 2
@@ -134,6 +134,7 @@ basic.forever(function () {
     }
     if (Score >= 80) {
         Speed = 1
+        basic.pause(2000)
         basic.showLeds(`
             # # # # #
             # # # # #
