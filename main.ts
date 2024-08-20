@@ -120,6 +120,3 @@ basic.forever(function () {
     }
     basic.pause(Speed)
 })
-basic.forever(function () {
-	
-})
