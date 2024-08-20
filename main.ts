@@ -100,20 +100,23 @@ basic.forever(function () {
         Score += 1
     }
     game.setScore(Score)
-    if (Score >= 10 && Score <= 15) {
+    if (Score >= 10 && Score < 15) {
         Speed = 400
     }
-    if (Score >= 15 && Score <= 20) {
+    if (Score >= 15 && Score < 20) {
         Speed = 300
     }
-    if (Score >= 20 && Score <= 30) {
+    if (Score >= 20 && Score < 30) {
         Speed = 200
     }
-    if (Score >= 30) {
+    if (Score >= 30 && Score < 40) {
         Speed = 100
     }
-    if (Score >= 30) {
+    if (Score >= 30 && Score < 40) {
         Speed = randint(50, 500)
+    }
+    if (Score > 50) {
+        Speed = 1
     }
     basic.pause(Speed)
 })
