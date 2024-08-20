@@ -5,6 +5,7 @@ def Spawn_Enemy():
     EnemyX = randint(0, 4)
     led.plot_brightness(EnemyX, EnemyY, 255)
     Enemy_Dead = 0
+    
 def Kill_Enemy():
     led.unplot(EnemyX, EnemyY)
 
@@ -14,7 +15,7 @@ def on_button_pressed_a():
     x += -1
     if x < 0:
         x = 0
-    led.plot_brightness(x, y, 255)
+    led.plot_brightness(x, y, 10)
 input.on_button_pressed(Button.A, on_button_pressed_a)
 
 def on_button_pressed_b():
@@ -23,42 +24,58 @@ def on_button_pressed_b():
     x += 1
     if x > 4:
         x = 4
-    led.plot_brightness(x, y, 255)
+    led.plot_brightness(x, y, 10)
 input.on_button_pressed(Button.B, on_button_pressed_b)
 
 def A_Bot():
-    global Move, x
+    global x, Autobot
+    # if EnemyY == y:
+    # if EnemyX > x and x < 4:
+    # led.unplot(x, y)
+    # x += 1
+    # led.plot_brightness(x, y, 255)
+    # elif EnemyX < x and x > 0:
+    # # Move left if the enemy is to the left
+    # led.unplot(x, y)
+    # x += 0 - 1
+    # led.plot_brightness(x, y, 255)
+    # elif EnemyX == x:
+    # # If the enemy is directly above the player, randomly move left or right
+    # Move = randint(0, 1)
+    # if Move == 1 and x < 4:
+    # led.unplot(x, y)
+    # x += 1
+    # led.plot_brightness(x, y, 255)
+    # elif Move == 0 and x > 0:
+    # led.unplot(x, y)
+    # x += 0 - 1
+    # led.plot_brightness(x, y, 255)
     if EnemyY == y:
-        Move = randint(0, 1)
-    if Move == 1:
-        if y != 4:
+        if x >= 4:
             led.unplot(x, y)
             x += 1
-            if x > 4:
-                x = 4
+            led.plot_brightness(x, y, 255)
+        if x <= 0:
+            led.unplot(x, y)
+            x += -1
             led.plot_brightness(x, y, 255)
         else:
             led.unplot(x, y)
-            x += -1
-            if x < 0:
-                x = 0
-            led.plot_brightness(x, y, 255)
-    elif Move == 0:
-        if y != 0:
-            led.unplot(x, y)
-            x += -1
-            if x < 0:
-                x = 0
-            led.plot_brightness(x, y, 255)
-        else:
-            led.unplot(x, y)
-            x += 1
-            if x > 4:
-                x = 4
+            Autobot = randint(0, 1)
+            if Autobot == 0:
+                x += 1
+            if Autobot == 1:
+                x += -1
             led.plot_brightness(x, y, 255)
 
 def on_gesture_shake():
-    pass
+    global AutoWin
+    if AutoWin == 0:
+        AutoWin = 1
+        basic.show_string("" + str((AutoWin)))
+    if AutoWin == 1:
+        AutoWin = 0
+        basic.show_string("" + str((AutoWin)))
 input.on_gesture(Gesture.SHAKE, on_gesture_shake)
 
 def Move_Enemy():
@@ -67,17 +84,20 @@ def Move_Enemy():
     EnemyY += 1
     if EnemyY <= 4:
         led.plot_brightness(EnemyX, EnemyY, 255)
-Score = 0
+Autobot = 0
 Enemy_Dead = 0
 EnemyX = 0
 EnemyY = 0
 Move = 0
 y = 0
 x = 0
+AutoWin = 0
+Score = 0
+AutoWin = 0
 Speed = 500
 x = 2
 y = 4
-led.plot(x, y)
+led.plot_brightness(x, y, 10)
 Spawn_Enemy()
 
 def on_forever():
@@ -94,13 +114,26 @@ def on_forever():
     elif EnemyX == 4 and EnemyY != y:
         Score += 1
     game.set_score(Score)
-    if Score >= 10 and Score <= 15:
+    if Score >= 10 and Score < 15:
         Speed = 400
-    if Score >= 15 and Score <= 20:
+    if Score >= 15 and Score < 20:
         Speed = 300
-    if Score >= 20 and Score <= 30:
+    if Score >= 20 and Score < 30:
         Speed = 200
-    if Score >= 30:
+    if Score >= 30 and Score < 40:
         Speed = 100
+    if Score >= 30 and Score < 80:
+        Speed = randint(50, 500)
+    if Score >= 80:
+        Speed = 1
+        basic.show_leds("""
+            # # # # #
+            # # # # #
+            # # # # #
+            # # # # #
+            # # # # #
+            """)
+    if AutoWin == 1:
+        A_Bot()
     basic.pause(Speed)
 basic.forever(on_forever)

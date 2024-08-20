@@ -14,7 +14,7 @@ input.onButtonPressed(Button.A, function () {
     if (x < 0) {
         x = 0
     }
-    led.plotBrightness(x, y, 255)
+    led.plotBrightness(x, y, 10)
 })
 input.onButtonPressed(Button.B, function () {
     led.unplot(x, y)
@@ -22,48 +22,62 @@ input.onButtonPressed(Button.B, function () {
     if (x > 4) {
         x = 4
     }
-    led.plotBrightness(x, y, 255)
+    led.plotBrightness(x, y, 10)
 })
 function A_Bot () {
+    // if EnemyY == y:
+    // if EnemyX > x and x < 4:
+    // led.unplot(x, y)
+    // x += 1
+    // led.plot_brightness(x, y, 255)
+    // elif EnemyX < x and x > 0:
+    // # Move left if the enemy is to the left
+    // led.unplot(x, y)
+    // x += 0 - 1
+    // led.plot_brightness(x, y, 255)
+    // elif EnemyX == x:
+    // # If the enemy is directly above the player, randomly move left or right
+    // Move = randint(0, 1)
+    // if Move == 1 and x < 4:
+    // led.unplot(x, y)
+    // x += 1
+    // led.plot_brightness(x, y, 255)
+    // elif Move == 0 and x > 0:
+    // led.unplot(x, y)
+    // x += 0 - 1
+    // led.plot_brightness(x, y, 255)
     if (EnemyY == y) {
-        Move = randint(0, 1)
-    }
-    if (Move == 1) {
-        if (y != 4) {
+        if (x >= 4) {
             led.unplot(x, y)
             x += 1
-            if (x > 4) {
-                x = 4
-            }
-            led.plotBrightness(x, y, 255)
-        } else {
-            led.unplot(x, y)
-            x += -1
-            if (x < 0) {
-                x = 0
-            }
             led.plotBrightness(x, y, 255)
         }
-    } else if (Move == 0) {
-        if (y != 0) {
+        if (x <= 0) {
             led.unplot(x, y)
             x += -1
-            if (x < 0) {
-                x = 0
-            }
             led.plotBrightness(x, y, 255)
         } else {
             led.unplot(x, y)
-            x += 1
-            if (x > 4) {
-                x = 4
+            Autobot = randint(0, 1)
+            if (Autobot == 0) {
+                x += 1
+            }
+            if (Autobot == 1) {
+                x += -1
             }
             led.plotBrightness(x, y, 255)
         }
     }
 }
 input.onGesture(Gesture.Shake, function () {
-	
+    if (AutoWin == 0) {
+        AutoWin = 1
+        basic.showString("" + AutoWin)
+    }
+    if (AutoWin == 1) {
+        AutoWin = 0
+        basic.showString("" + AutoWin)
+    }
 })
 function Move_Enemy () {
     led.unplot(EnemyX, EnemyY)
@@ -73,16 +87,19 @@ function Move_Enemy () {
     }
 }
 let Score = 0
+let Autobot = 0
 let Enemy_Dead = 0
 let EnemyX = 0
 let EnemyY = 0
 let Move = 0
 let y = 0
 let x = 0
+let AutoWin = 0
+AutoWin = 0
 let Speed = 500
 x = 2
 y = 4
-led.plot(x, y)
+led.plotBrightness(x, y, 10)
 Spawn_Enemy()
 basic.forever(function () {
     if (EnemyY >= 4) {
@@ -112,11 +129,21 @@ basic.forever(function () {
     if (Score >= 30 && Score < 40) {
         Speed = 100
     }
-    if (Score >= 30 && Score < 40) {
+    if (Score >= 30 && Score < 80) {
         Speed = randint(50, 500)
     }
-    if (Score > 50) {
+    if (Score >= 80) {
         Speed = 1
+        basic.showLeds(`
+            # # # # #
+            # # # # #
+            # # # # #
+            # # # # #
+            # # # # #
+            `)
+    }
+    if (AutoWin == 1) {
+        A_Bot()
     }
     basic.pause(Speed)
 })
