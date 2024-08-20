@@ -112,6 +112,9 @@ basic.forever(function () {
     if (Score >= 30) {
         Speed = 100
     }
+    if (Score >= 30) {
+        Speed = randint(50, 500)
+    }
     basic.pause(Speed)
 })
 basic.forever(function () {
